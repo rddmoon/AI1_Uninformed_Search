@@ -1,5 +1,7 @@
 # 8 Queen
   8 queen merupakan permasalahan untuk meletakkan 8 ratu pada papan catur berukuran 8x8 sedemikian hingga tidak ada ratu yang saling serang. Karena pada catur, ratu dapat menyerang secara diagonal, sebaris, dan sekolom, maka kita harus meletakkan ratu-ratu tersebut sedemikian hingga tidak ada ratu yang berada pada baris, kolom, dan diagonal yang sama.
+  File:
+  - <a href = "https://github.com/rddmoon/AI1_Uninformed_Search/blob/master/8-queen/8-queen.cpp">8-queen.cpp<\a>
  
 # Penjelasan
 Fungsi check merupakan fungsi untuk mengecek apakah peletakan ratu saat ini memiliki diagonal dan baris yang sama. Untuk peletakan secara kolom tidak dicek, karena program ini hanya meletakkan 1 ratu pada 1 kolom, lalu pindah ke kolom selanjutnya.
