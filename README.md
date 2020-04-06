@@ -1,3 +1,122 @@
+# 8 Puzzle IDS
+   Pada DFS, saat melakukan pencarian dapat terjadi masalah infinite depth. DFS lebih menekankan dalam efisiensi penyimpanan karena DFS tidak menyimpan node yang telah dikunjungi ke dalam memori. Terkadang sousi bisa berada pada cabang node yang sangat jauh dari induk, sehingga saat melakukan pencarian, dfs terus mengeksplorasi cabang-cabang itu seperti tidak ada ujungnya dan malah dapat menjauhkan dari goal atau tujuan. DFS terus melakukan ekspansi secara tak hingga dan dapat menyebabkan melewati cabang yang menuju ke node solusi. 
+   
+   IDS atau Iterative Deepening Search merupakan sebuah algoritma pengembangan dari DFS. Pada IDS, untuk menghindari infinite depth pada DFS dilakukan pembatasan pada depth yang dicari sehingga pencarian hanya terbatas sampai depth itu. Kemudian jika sampai dept yang ditetapkan masih belum menemukan node solusi, kita tambahkan depth secara iteratif.
+# Penjelasan
+Global variabel yang dibutuhkan. array state berukuran 9x9x9x9x9x9x9x9x9 memiliki fungsi yang mirip dengan tree node sebagai penyimpanan untuk state-state yang mungkin terjadi di 8 puzzle.
+```
+int node = 0;
+int goal[9];
+int solution = 0;
+int state[9][9][9][9][9][9][9][9][9];
+```
+Pada fungsi main didefinisikan goal state untuk 8 puzzle dan menampilkannya ke layar. Kemudian input dari use untuk initial state dari eight puzzle. Di sini juga terdapat pemanggil fungsi DFS. Jika solusi belum ditemukan maka depth akan ditambah sebanyak 7 terus menerus hingga menemukan goal state dan menampilkan langkah penyelesaiannya ke layar. Pada program ini, angka '0' dijadikan sebagai patokan dalam menggeser puzzle untuk menemukan solusinya.
+```
+int main(){
+    
+    int game[9];
+    int X;
+    goal[0] = 1;
+    goal[1] = 2;
+    goal[2] = 3;
+    goal[3] = 4;
+    goal[4] = 5;
+    goal[5] = 6;
+    goal[6] = 7;
+    goal[7] = 0;
+    goal[8] = 8;
+    
+    printf("Goal State:\n");
+	  for(int i = 0;i < 3; i++){
+        printf("%d ",goal[i]);
+    }
+    printf("\n");
+    for(int i = 3;i < 6; i++){
+        printf("%d ",goal[i]);
+    }
+    printf("\n");
+    for(int i = 6;i < 9; i++){
+        printf("%d ",goal[i]);
+    }
+    printf("\n");
+    first:
+    printf("\nInput initial state:\n");
+    
+    for(int i = 0;i < 9; i++){
+        scanf("%d",&game[i]);
+        if(game[i] == 0){
+            X = i;
+        }
+        if(game[i] > 9 || game[i] < 0){
+        	printf("Input should be numbers from 0 to 8\n");
+        	game[9] = {0};
+        	goto first;
+		}
+    }
+    int deep = 0;
+    while (!solution){
+        deep += 7;
+        memset(state, 0, sizeof(state[0][0][0][0][0][0][0][0][0])*9*9*9*9*9*9*9*9*9);
+        dfs(game, X, "\nPath:\n", deep);
+    } 
+    printf("\nNode: %d\n", node);
+}
+```
+Pada fungsi DFS terdapat kondisi untuk mengecek apakah state sudah pernah dikunjungi sehingga tidak perlu dicek kembali.
+```
+if(state[game[0]][game[1]][game[2]][game[3]][game[4]][game[5]][game[6]][game[7]][game[8]]==0){
+        node++;
+        state[game[0]][game[1]][game[2]][game[3]][game[4]][game[5]][game[6]][game[7]][game[8]]=1;
+    }else{
+        return;
+    }
+```
+Kode bagian di bawah ini berfungsi untuk mengecek apakah sudah mencapai goal state dan menampilkan path penyelesaian ke layar.
+```
+int find = 0;
+    for(int i=0;i < 9;i++){   
+        if(game[i] != goal[i] ){
+            find = 1;
+            break;
+        }
+    }
+    if(find == 0){
+        	solution = 1;
+            printf("%s",path.c_str());
+            return;
+        }
+```
+Pada fungsi DFS juga terdapat kondisi dalam melakukan eksplorasi, apakah perlu mengeser angka '0' yang digunakan sebagai patokan, ke atas, ke bawah, ke kanan, atau ke kiri.
+```
+if(X < (3 * 2)){
+        game[X] = game[X+3];
+        game[X+3] = 0;
+        dfs(game, X+3, path+"Down\n", deep-1);
+        game[X+3] = game[X];
+        game[X] = 0;
+    }
+    if((X+1) % 3 !=1 ){
+        game[X] = game[X-1];
+        game[X-1] = 0;
+        dfs(game, X-1, path+"Left\n", deep-1);
+        game[X-1] = game[X];
+        game[X] = 0;
+    }
+    if((X+1) % 3 !=0 ){
+        game[X] = game[X+1];
+        game[X+1] = 0;
+        dfs(game, X+1, path+"Right\n", deep-1);
+        game[X+1] = game[X];
+        game[X] = 0;
+    }
+    if(X > 2){
+        game[X] = game[X-3];
+        game[X-3] = 0;
+        dfs(game, X-3, path+"Up\n", deep-1);
+        game[X-3] = game[X];
+        game[X] = 0;   
+    }
+```
 # 8 Queen
   8 queen merupakan permasalahan untuk meletakkan 8 ratu pada papan catur berukuran 8x8 sedemikian hingga tidak ada ratu yang saling serang. Karena pada catur, ratu dapat menyerang secara diagonal, sebaris, dan sekolom, maka kita harus meletakkan ratu-ratu tersebut sedemikian hingga tidak ada ratu yang berada pada baris, kolom, dan diagonal yang sama.
   File:
