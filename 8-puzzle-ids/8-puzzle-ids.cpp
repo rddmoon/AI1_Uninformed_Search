@@ -3,7 +3,7 @@
 
 using namespace std;
 
-void DFS(int game[9], int X, string path, int deep);
+void DFS(int game[9], int X, string path, int depth);
 
 int node = 0;
 int goal[9];
@@ -42,7 +42,7 @@ int main(){
     
     for(int i = 0;i < 9; i++){
         scanf("%d",&game[i]);
-        if(game[i] == 0){
+        if(game[i]==0){
             X = i;
         }
         if(game[i] > 9 || game[i] < 0){
@@ -51,16 +51,16 @@ int main(){
         	goto first;
 		}
     }
-    int deep = 0;
+    int depth = 0;
     while (!solution){
-        deep += 7;
+        depth += 10;
         memset(state, 0, sizeof(state[0][0][0][0][0][0][0][0][0])*9*9*9*9*9*9*9*9*9);
-        dfs(game, X, "\nPath:\n", deep);
+        DFS(game, X, "\nPath:\n", depth);
     } 
     printf("\nNode: %d\n", node);
 }
-void dfs(int game[9], int X, string path, int deep){
-	if(solution == 1||deep == 0){
+void DFS(int game[9], int X, string path, int depth){
+	if(solution == 1||depth == 0){
 		return;
 	}
     if(state[game[0]][game[1]][game[2]][game[3]][game[4]][game[5]][game[6]][game[7]][game[8]]==0){
@@ -69,6 +69,7 @@ void dfs(int game[9], int X, string path, int deep){
     }else{
         return;
     }
+
     int find = 0;
     for(int i=0;i < 9;i++){   
         if(game[i] != goal[i] ){
@@ -78,34 +79,34 @@ void dfs(int game[9], int X, string path, int deep){
     }
     if(find == 0){
         	solution = 1;
-            printf("%s",path.c_str());
+            printf("%s", path.c_str());
             return;
         }
     if(X < (3 * 2)){
         game[X] = game[X+3];
         game[X+3] = 0;
-        dfs(game, X+3, path+"Down\n", deep-1);
+        DFS(game, X+3, path+"Up\n", depth-1);
         game[X+3] = game[X];
         game[X] = 0;
     }
-    if((X+1) % 3 !=1 ){
+    if((X+1) % 3 != 1 ){
         game[X] = game[X-1];
         game[X-1] = 0;
-        dfs(game, X-1, path+"Left\n", deep-1);
+        DFS(game, X-1, path+"Right\n", depth-1);
         game[X-1] = game[X];
         game[X] = 0;
     }
-    if((X+1) % 3 !=0 ){
+    if((X+1) % 3 != 0 ){
         game[X] = game[X+1];
         game[X+1] = 0;
-        dfs(game, X+1, path+"Right\n", deep-1);
+        DFS(game, X+1, path+"Left\n", depth-1);
         game[X+1] = game[X];
         game[X] = 0;
     }
     if(X > 2){
         game[X] = game[X-3];
         game[X-3] = 0;
-        dfs(game, X-3, path+"Up\n", deep-1);
+        DFS(game, X-3, path+"Down\n", depth-1);
         game[X-3] = game[X];
         game[X] = 0;   
     }
