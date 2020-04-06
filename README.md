@@ -1,7 +1,8 @@
 # 8 Puzzle IDS
-   Pada DFS, saat melakukan pencarian dapat terjadi masalah infinite depth. DFS lebih menekankan dalam efisiensi penyimpanan karena DFS tidak menyimpan node yang telah dikunjungi ke dalam memori. Terkadang sousi bisa berada pada cabang node yang sangat jauh dari induk, sehingga saat melakukan pencarian, dfs terus mengeksplorasi cabang-cabang itu seperti tidak ada ujungnya dan malah dapat menjauhkan dari goal atau tujuan. DFS terus melakukan ekspansi secara tak hingga dan dapat menyebabkan melewati cabang yang menuju ke node solusi. 
+   Pada DFS, saat melakukan pencarian dapat terjadi masalah infinite depth. DFS lebih menekankan dalam efisiensi penyimpanan, terkadang solusi bisa berada pada cabang node yang sangat jauh dari induk, sehingga saat melakukan pencarian, DFS terus mengeksplorasi cabang-cabang itu seperti tidak ada ujungnya dan malah dapat menjauhkan dari goal atau tujuan. DFS terus melakukan ekspansi secara tak hingga dan menyebabkannya melewati cabang yang dapat menuju ke node solusi. 
    
-   IDS atau Iterative Deepening Search merupakan sebuah algoritma pengembangan dari DFS. Pada IDS, untuk menghindari infinite depth pada DFS dilakukan pembatasan pada depth yang dicari sehingga pencarian hanya terbatas sampai depth itu. Kemudian jika sampai dept yang ditetapkan masih belum menemukan node solusi, kita tambahkan depth secara iteratif.
+   IDS atau Iterative Deepening Search merupakan sebuah algoritma pengembangan dari DFS. Pada IDS, untuk menghindari infinite depth pada DFS dilakukan pembatasan pada depth yang dicari sehingga pencarian hanya terbatas sampai depth itu. Kemudian jika sampai depth yang ditetapkan masih belum menemukan node solusi maka ditambahkan depth secara iteratif.
+   
 # Penjelasan
 Global variabel yang dibutuhkan. array state berukuran 9x9x9x9x9x9x9x9x9 memiliki fungsi yang mirip dengan tree node sebagai penyimpanan untuk state-state yang mungkin terjadi di 8 puzzle.
 ```
@@ -10,7 +11,7 @@ int goal[9];
 int solution = 0;
 int state[9][9][9][9][9][9][9][9][9];
 ```
-Pada fungsi main didefinisikan goal state untuk 8 puzzle dan menampilkannya ke layar. Kemudian input dari use untuk initial state dari eight puzzle. Di sini juga terdapat pemanggil fungsi DFS. Jika solusi belum ditemukan maka depth akan ditambah sebanyak 7 terus menerus hingga menemukan goal state dan menampilkan langkah penyelesaiannya ke layar. Pada program ini, angka '0' dijadikan sebagai patokan dalam menggeser puzzle untuk menemukan solusinya.
+Pada fungsi main didefinisikan goal state untuk 8 puzzle dan menampilkannya ke layar. Kemudian input dari use untuk initial state dari 8 puzzle. Di sini juga terdapat pemanggil fungsi DFS. Jika solusi belum ditemukan maka depth akan ditambah sebanyak 7 terus menerus hingga menemukan goal state dan menampilkan langkah penyelesaiannya ke layar. Pada program ini, angka '0' dijadikan sebagai patokan dalam menggeser puzzle untuk menemukan solusinya.
 ```
 int main(){
     
