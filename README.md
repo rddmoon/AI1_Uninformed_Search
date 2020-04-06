@@ -1,8 +1,14 @@
-# 8 Puzzle IDS
-   Pada DFS, saat melakukan pencarian dapat terjadi masalah infinite depth. DFS lebih menekankan dalam efisiensi penyimpanan, terkadang solusi bisa berada pada cabang node yang sangat jauh dari induk, sehingga saat melakukan pencarian, DFS terus mengeksplorasi cabang-cabang itu seperti tidak ada ujungnya dan malah dapat menjauhkan dari goal atau tujuan. DFS terus melakukan ekspansi secara tak hingga dan menyebabkannya melewati cabang yang dapat menuju ke node solusi. 
-   
-   IDS atau Iterative Deepening Search merupakan sebuah algoritma pengembangan dari DFS. Pada IDS, untuk menghindari infinite depth pada DFS dilakukan pembatasan pada depth yang dicari sehingga pencarian hanya terbatas sampai depth itu. Kemudian jika sampai depth yang ditetapkan masih belum menemukan node solusi maka ditambahkan depth secara iteratif.
-   
+# 8 Puzzle BFS
+
+# Penjelasan
+
+# 8 Puzzle DFS
+  Metode DFS melakukan expand ke seluruh node yang berisi semua kemungkinan state secara urut satu persatu. Dalam eksplorasinya, DFS berjalan menuju node terjauh terlebih dahulu (Depth-First) sehingga pencarian goal state bisa saja tidak ditemukan atau bisa saja langkah yang ditemukan bukanlah langkah tercepat menuju ke goal state mengingat banyak kemungkinan bisa muncul dan ada banyak percabangan yang dapat terjadi di permasalahan 8 puzzle.
+  
+  
+  File:
+  - <a href = "https://github.com/rddmoon/AI1_Uninformed_Search/blob/master/8-puzzle-dfs/8-puzzle-dfs.cpp">8-puzzle-dfs.cpp</a>
+  
 # Penjelasan
 Global variabel yang dibutuhkan. array state berukuran 9x9x9x9x9x9x9x9x9 memiliki fungsi yang mirip dengan tree node sebagai penyimpanan untuk state-state yang mungkin terjadi di 8 puzzle.
 ```
@@ -11,12 +17,13 @@ int goal[9];
 int solution = 0;
 int state[9][9][9][9][9][9][9][9][9];
 ```
-Pada fungsi main didefinisikan goal state untuk 8 puzzle dan menampilkannya ke layar. Kemudian input dari use untuk initial state dari 8 puzzle. Di sini juga terdapat pemanggil fungsi DFS. Jika solusi belum ditemukan maka depth akan ditambah sebanyak 7 terus menerus hingga menemukan goal state dan menampilkan langkah penyelesaiannya ke layar. Pada program ini, angka '0' dijadikan sebagai patokan dalam menggeser puzzle untuk menemukan solusinya.
+Pada fungsi main didefinisikan goal state untuk 8 puzzle dan menampilkannya ke layar. Kemudian input dari use untuk initial state dari 8 puzzle. Di sini juga terdapat pemanggil fungsi DFS dan menampilkan langkah penyelesaiannya serta node dari goal state ke layar. Pada program ini, angka '0' dijadikan sebagai patokan dalam menggeser angka di puzzle ke arah angka '0' (angka '0' dianggap sebagai space kosong dalam puzzle) untuk menemukan solusinya.
 ```
 int main(){
     
     int game[9];
     int X;
+    //buat goal
     goal[0] = 1;
     goal[1] = 2;
     goal[2] = 3;
@@ -45,7 +52,7 @@ int main(){
     
     for(int i = 0;i < 9; i++){
         scanf("%d",&game[i]);
-        if(game[i] == 0){
+        if(game[i]==0){
             X = i;
         }
         if(game[i] > 9 || game[i] < 0){
@@ -54,12 +61,8 @@ int main(){
         	goto first;
 		}
     }
-    int deep = 0;
-    while (!solution){
-        deep += 7;
-        memset(state, 0, sizeof(state[0][0][0][0][0][0][0][0][0])*9*9*9*9*9*9*9*9*9);
-        dfs(game, X, "\nPath:\n", deep);
-    } 
+    memset(state, 0, sizeof(state[0][0][0][0][0][0][0][0][0])*9*9*9*9*9*9*9*9*9);
+    DFS(game, X, "\nPath:\n");
     printf("\nNode: %d\n", node);
 }
 ```
@@ -87,39 +90,60 @@ int find = 0;
             return;
         }
 ```
-Pada fungsi DFS juga terdapat kondisi dalam melakukan eksplorasi, apakah perlu mengeser angka '0' yang digunakan sebagai patokan, ke atas, ke bawah, ke kanan, atau ke kiri.
+Pada fungsi DFS juga terdapat kondisi dalam melakukan eksplorasi, apakah perlu mengeser angka ke atas, ke bawah, ke kanan, atau ke kiri menuju ke arah angka '0' yang merupakan tempat kosong yang konsepnya seperti pada permainan 8 puzzle biasa.
 ```
 if(X < (3 * 2)){
         game[X] = game[X+3];
-        game[X+3] = 0;
-        dfs(game, X+3, path+"Down\n", deep-1);
+        game[X+3] =0;
+        DFS(game, X+3, path+"Up\n");
         game[X+3] = game[X];
         game[X] = 0;
     }
     if((X+1) % 3 !=1 ){
         game[X] = game[X-1];
-        game[X-1] = 0;
-        dfs(game, X-1, path+"Left\n", deep-1);
-        game[X-1] = game[X];
-        game[X] = 0;
+        game[X-1]=0;
+        DFS(game,X-1,path+"Right\n");
+        game[X-1]=game[X];
+        game[X]=0;
     }
     if((X+1) % 3 !=0 ){
         game[X] = game[X+1];
-        game[X+1] = 0;
-        dfs(game, X+1, path+"Right\n", deep-1);
-        game[X+1] = game[X];
-        game[X] = 0;
+        game[X+1]=0;
+        DFS(game,X+1,path+"Left\n");
+        game[X+1]=game[X];
+        game[X]=0;
     }
     if(X > 2){
         game[X] = game[X-3];
-        game[X-3] = 0;
-        dfs(game, X-3, path+"Up\n", deep-1);
-        game[X-3] = game[X];
-        game[X] = 0;   
+        game[X-3]= 0;
+        DFS(game,X-3,path+"Down\n");
+        game[X-3]=game[X];
+        game[X]=0;   
     }
 ```
+
+# 8 Puzzle IDS
+   Pada DFS, saat melakukan pencarian dapat terjadi masalah infinite depth. Terkadang solusi bisa berada pada cabang node yang sangat jauh dari induk, sehingga saat melakukan pencarian, DFS terus mengeksplorasi cabang-cabang itu seperti tidak ada ujungnya dan malah dapat menjauhkan dari goal atau tujuan. DFS terus melakukan ekspansi secara tak hingga dan menyebabkannya melewati cabang yang dapat menuju ke node solusi. 
+   
+   IDS atau Iterative Deepening Search merupakan sebuah algoritma pengembangan dari DFS. Pada IDS, untuk menghindari infinite depth pada DFS dilakukan pembatasan pada depth yang dicari sehingga pencarian hanya terbatas sampai depth itu. Kemudian jika sampai depth yang ditetapkan masih belum menemukan goal state atau solusi, maka ditambahkan depth secara iteratif. IDS juga membantu algoritma DFS menemukan langkah terpendek atau solusi yang paling dekat dengan node induk.
+   
+   File:
+   - <a href = "https://github.com/rddmoon/AI1_Uninformed_Search/blob/master/8-puzzle-ids/8-puzzle-ids.cpp">8-puzzle-ids.cpp</a>
+   
+# Penjelasan
+Source code kurang lebih sama dengan penjelasan 8 puzzle DFS, karena hanya ditambahkan limit untuk depth yang perlu ditelusuri. Limit depth berada di fungsi main. Pada awal depth = 0 kemudian menjadi 10 sebelum memanggil fungsi DFS. While loop menambahkan depth secara iteratif selama solusi belum ditemukan.
+```
+int depth = 0;
+    while (!solution){
+        depth += 10;
+        memset(state, 0, sizeof(state[0][0][0][0][0][0][0][0][0])*9*9*9*9*9*9*9*9*9);
+        DFS(game, X, "\nPath:\n", depth);
+    } 
+```
+
 # 8 Queen
   8 queen merupakan permasalahan untuk meletakkan 8 ratu pada papan catur berukuran 8x8 sedemikian hingga tidak ada ratu yang saling serang. Karena pada catur, ratu dapat menyerang secara diagonal, sebaris, dan sekolom, maka kita harus meletakkan ratu-ratu tersebut sedemikian hingga tidak ada ratu yang berada pada baris, kolom, dan diagonal yang sama.
+  
   File:
   - <a href = "https://github.com/rddmoon/AI1_Uninformed_Search/blob/master/8-queen/8-queen.cpp">8-queen.cpp</a>
  
