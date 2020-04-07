@@ -1,5 +1,5 @@
 # 8 Puzzle BFS
-  Metode Breadth-First atau BFS melakukan eksplorasi ke semua node yang berisi kemungkinan state satu persatu. Dalam mengeksplorasi masing-masing node, BFS berjalan menuju node-node terdekat atau node-node pada layer depth terdekat dari state awal, kemudian baru dilanjutkan ke layer berikutnya, dst. Dalam menggunakan BFS biasa kemungkinan dapat menemukan solusi dengan langkah tercepat lebih tinggi ketimbang algoritma DFS, namun dalam pencariannya bisa menjadi lebih lama terutama untuk depth yang tidak terlalu besar.
+  Metode Breadth-First atau BFS melakukan eksplorasi ke semua node yang berisi kemungkinan state satu persatu. Dalam mengeksplorasi masing-masing node, BFS berjalan menuju node-node terdekat atau node-node pada layer depth terdekat dari state awal, kemudian baru dilanjutkan ke layer berikutnya, dst. Dalam menggunakan BFS, kemungkinan dapat menemukan solusi dengan langkah tercepat lebih tinggi ketimbang algoritma DFS, namun dalam pencariannya bisa menjadi lebih lama.
   
   File:
   - <a href ="https://github.com/rddmoon/AI1_Uninformed_Search/blob/master/8-puzzle-bfs/8-puzzle-bfs.cpp">8-puzzle-bfs.cpp</a>
