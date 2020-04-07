@@ -1,9 +1,173 @@
 # 8 Puzzle BFS
+  Metode Breadth-First atau BFS melakukan eksplorasi ke semua node yang berisi kemungkinan state satu persatu. Dalam mengeksplorasi masing-masing node, BFS berjalan menuju node-node terdekat atau node-node pada layer depth terdekat dari state awal, kemudian baru dilanjutkan ke layer berikutnya, dst. Dalam menggunakan BFS biasa kemungkinan dapat menemukan solusi dengan langkah tercepat lebih tinggi ketimbang algoritma DFS, namun dalam pencariannya bisa menjadi lebih lama terutama untuk depth yang tidak terlalu besar.
+  
+  File:
+  - <a href ="https://github.com/rddmoon/AI1_Uninformed_Search/blob/master/8-puzzle-bfs/8-puzzle-bfs.cpp">8-puzzle-bfs.cpp</a>
 
 # Penjelasan
+Pada awal dideklarasikan vector dan size n yang diperlukan di global.
+```
+int n = 9;
+vector<int> goal = {1, 2, 3, 4, 5, 6, 7, 0, 8};
+map<vector<int>, bool> visit;
+```
+Menggunakan struct untuk mendefinisikan node-node state yang akan dibuat
+```
+struct node {
+    vector<int> state;
+    node* parent;
+    
+    node(){
+        parent = NULL;
+    }
+};
+```
+Fungsi printState merupakan fungsi untuk menampilkan state saat ini yang merupakan state menuju goal state atau solusi
+```
+void printState(vector<int> state){
+    for(int i = 0; i < 9; ){
+        for(int j = 0; j < 3; ++j, ++i){
+        	printf("%d ", state[i]);
+		}
+        printf("\n");
+    }
+    printf("\n");
+}
+```
+Fungsi printPath merupakan fungsi untuk menghitung jumlah path atau langkah yang dibutuhkan untuk menemukan solusi dan menampilkannya ke layar.
+```
+void printPath(node* state){
+	int i;
+    vector<node*> path;
+    while(state){
+        path.push_back(state);
+        state = state->parent;
+    }
+    printf("\nMoves: %lu\n", path.size()-1);
+    for(i = path.size()-1; i >= 0; --i){
+    	printState(path[i]->state);
+	}
+}
+```
+Fungsi ```node* createNewState``` merupakan fungsi untuk membuat node baru. Karena state-state yang akan muncul tidak pasti dan tidak ketahui di awal ada berapa banyak maka kita perlu mengalokasikan untuk node baru.
+```
+node* createNewState(node* state, int x, int y){
+    node* new_state = new node();
+    new_state->state = state->state;
+    swap(new_state->state[x], new_state->state[y]);
+    
+    return new_state;
+}
+```
+Fungsi BFS merupakan fungsi utama dalam penyelesaian 8 puzzle ini. Sesuai penjelasan awal mengenai metode BFS, fungsi ini berjalan kurang lebih sama. Namun ada tambahan disini ```queue<node*> q``` yang fungsinya mirip dengan queue, di sini queue ini berfungsi untuk menyimpan state yang menuju ke solusi. Semua state saat penelusuran BFS disimpan di queue tersebut, jika diketahui kemudian bahwa state bukan merupakan path menuju solusi maka queue di pop.
+```
+void BFS(node* initial){
+    visit[initial->state] = 1;
+    
+    int pos, row, col;
+    
+    node *curr = new node(), *child = new node();
+    queue<node*> q;    
+    q.push(initial);
+    
+    while(!q.empty()){
+        curr = q.front();
+        q.pop();
+        
+        if(curr->state == goal){
+            printPath(curr);
+            return;
+        }
+        int i;
+        for(i = 0; i < n; ++i){
+            if(curr->state[i] == 0){
+                pos = i;
+                break;
+            }
+        }
+        row = pos / 3;
+        col = pos % 3;
+
+        if(col != 0){
+            child = createNewState(curr, pos, pos-1);
+            
+            if(visit[child->state] == 0){
+                visit[child->state] = 1;
+                child->parent = curr;
+                q.push(child);
+            }
+        }
+
+        if(col != 2){
+            child = createNewState(curr, pos, pos+1);
+            
+            if(visit[child->state] == 0){
+                visit[child->state] = 1;
+                child->parent = curr;
+                q.push(child);
+            }
+        }
+
+        if(row != 0){
+            child = createNewState(curr, pos, pos-3);
+            
+            if(visit[child->state] == 0){
+                visit[child->state] = 1;
+                child->parent = curr;
+                q.push(child);
+            }
+        }
+
+        if(row != 2){
+            child = createNewState(curr, pos, pos+3);
+            
+            if(visit[child->state] == 0)
+            {
+                visit[child->state] = 1;
+                child->parent = curr;
+                q.push(child);
+            }
+        }
+    }
+}
+```
+Pada main, ditampilkan goal state, diminta input untuk initial state dan di push back ke vector, dan melakukan pemanggilan fungsi BFS untuk mencari solusinya.
+```
+int main(){
+    int i, x;
+    node* initial = new node();
+    printf("Goal state:\n");
+    for(i = 0; i < 3; i ++){
+    	printf("%d ", goal[i]);
+	}
+	printf("\n");
+	for(i = 3; i < 6; i ++){
+    	printf("%d ", goal[i]);
+	}
+	printf("\n");
+	for(i = 6; i < 9; i ++){
+    	printf("%d ", goal[i]);
+	}
+	printf("\n");
+    first:
+    printf("\nInput initial state:\n");
+    for(i = 0; i < n; ++i){
+        scanf("%d", &x);
+        if(x > 8 || x < 0){
+        	printf("\nInput should be numbers from 0 to 8\n");
+        	goto first;
+		}
+        initial->state.push_back(x);
+    }
+    
+    BFS(initial);
+    
+    return 0;
+}
+```
 
 # 8 Puzzle DFS
-  Metode DFS melakukan expand ke seluruh node yang berisi semua kemungkinan state secara urut satu persatu. Dalam eksplorasinya, DFS berjalan menuju node terjauh terlebih dahulu (Depth-First) sehingga pencarian goal state bisa saja tidak ditemukan atau bisa saja langkah yang ditemukan bukanlah langkah tercepat menuju ke goal state mengingat banyak kemungkinan bisa muncul dan ada banyak percabangan yang dapat terjadi di permasalahan 8 puzzle.
+  Berbeda dengan BFS, metode DFS melakukan ekslporasi ke seluruh node yang berisi semua kemungkinan state secara urut satu persatu. Dalam eksplorasinya, DFS berjalan menuju node paling kiri kemudian melanjutkannya terus sampai terjauh terlebih dahulu (Depth-First) sehingga pencarian goal state bisa saja tidak ditemukan atau bisa saja langkah yang ditemukan bukanlah langkah tercepat menuju ke goal state mengingat banyak kemungkinan bisa muncul dan ada banyak percabangan yang dapat terjadi di permasalahan 8 puzzle. Namun dalam implementasi kali ini tidak digunakan tree maupun vector, digantikan dengan array untuk menyimpan tiap state yang mungkin dalam permasalahan 8 puzzle.
   
   
   File:
